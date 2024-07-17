@@ -4,7 +4,7 @@
 
 Este projeto foi projetado para gerenciar e analisar dados de premiações de filmes no Golden Raspberry Awards. A aplicação utiliza um banco de dados SQLite para armazenar informações sobre os filmes e suas premiações, e inclui funcionalidades para processamento de dados e testes.
 
-O SQLite foi escolhido por ser um banco de dados leve e fácil de configurar, adequado para o escopo deste projeto.
+O SQLite foi escolhido por ser um banco de dados leve e fácil de configurar, adequado para o escopo deste projeto (uso em memória).
 
 ## Estrutura do Diretório
 
