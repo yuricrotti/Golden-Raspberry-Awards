@@ -52,6 +52,12 @@ Para rodar os testes, utilize o comando:
 pytest tests/ . 
 ```
 
+# Teste de Integração (github actions)
+
+Este projeto utiliza GitHub Actions para realizar testes de integração contínua. O workflow de integração contínua é definido no arquivo .github/workflows/python-ci.yml.
+Este workflow configura um ambiente de integração contínua que verifica automaticamente o código sempre que há novas alterações (push ou pull requests) na main. 
+.
+
 # Documentação da API
 Para visualizar a documentação interativa da API, acesse http://localhost:8000/docs. 
 Esta documentação é gerada automaticamente pelo Swagger e é embutida no FastAPI, proporcionando uma interface amigável para explorar e testar os endpoints da API.
