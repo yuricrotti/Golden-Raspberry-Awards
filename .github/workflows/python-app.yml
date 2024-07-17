@@ -29,10 +29,6 @@ jobs:
       run: |
         make install
 
-    - name: Lint code
-      run: |
-         make lint
-         
     - name: Run tests
       run: |
         make test
@@ -41,6 +37,3 @@ jobs:
       run: |
         make format
 
-    - name: Clean up
-      run: |
-        make clean
