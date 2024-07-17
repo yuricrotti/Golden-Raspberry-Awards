@@ -15,6 +15,7 @@ O SQLite foi escolhido por ser um banco de dados leve e fácil de configurar, ad
 * `schemas/`: Contém o arquivo `schemas.py`, que define os esquemas de dados.
 * `tests/`: Contém arquivos de teste para o projeto.
 
+obs: Esse projeto está configurado para rodar na porta 8000, verique se você não tem nenhum outro serviço rodando nela. 
 ## Instalação
 
 1. Clone o repositório:
