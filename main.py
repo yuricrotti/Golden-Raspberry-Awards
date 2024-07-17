@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
-
+import os
+import sys
 from models.models import Award
 from database.database import engine, Base, get_db, SessionLocal
 from repositories.repositories import AwardRepository
@@ -23,8 +24,12 @@ async def lifespan(app: FastAPI):
     db: Session = SessionLocal()
 
     try:
+        # get current working directory
+        cwd = os.getcwd()
+        dir_data = os.path.join(cwd, "data", "movielist.csv")
+
         # Load data into the database when the application starts
-        AwardRepository.save_from_csv(db, "/workspaces/teste/data/movielist.csv")
+        AwardRepository.save_from_csv(db, dir_data)
 
         yield
     finally:
@@ -35,6 +40,9 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+@app.get("/")
+def read_root():
+    return {"Message": "Welcome to the Awards API"}
 
 @app.get("/api/awards/winner_interval", response_model=dict)
 def read_root():
@@ -100,4 +108,4 @@ def delete_by_id(id: int, db: Session = Depends(get_db)):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
