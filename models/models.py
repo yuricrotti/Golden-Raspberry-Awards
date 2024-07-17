@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean
 
 from database.database import Base
 
+
 class Award(Base):
     __tablename__ = "awards"
 

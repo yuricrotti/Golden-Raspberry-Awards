@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class AwardBase(BaseModel):
     year: int
     title: str
@@ -7,9 +8,11 @@ class AwardBase(BaseModel):
     producers: str
     winner: bool
 
+
 class AwardBaseRequest(AwardBase):
     # Implement the AwardBaseRequest class
     ...
+
 
 class AwardResponse(AwardBase):
     id: int
