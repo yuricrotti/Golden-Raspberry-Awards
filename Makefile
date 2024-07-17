@@ -24,7 +24,6 @@ format:
 	black repositories/*.py
 	black models/*.py 
 
-
 clean:
 	rm -rf __pycache__ *.pyc
 

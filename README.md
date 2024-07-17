@@ -51,3 +51,28 @@ Para rodar os testes, utilize o comando:
 ```sh
 pytest tests/ . 
 ```
+
+# Documentação da API
+Para visualizar a documentação interativa da API, acesse http://localhost:8000/docs. 
+Esta documentação é gerada automaticamente pelo Swagger e é embutida no FastAPI, proporcionando uma interface amigável para explorar e testar os endpoints da API.
+
+## Docker
+
+Este projeto usa Docker para facilitar a construção, execução e implantação da aplicação. Siga as instruções abaixo para construir e executar o contêiner Docker.
+
+### Pré-requisitos
+
+- Certifique-se de ter o Docker instalado na sua máquina. Você pode baixar e instalar o Docker a partir do [site oficial](https://www.docker.com/get-started).
+
+### Construindo a Imagem Docker
+
+Para construir a imagem Docker, use o seguinte comando:
+
+```sh
+docker build . -t app-awards
+```
+
+Executando o Contêiner Docker
+```sh
+docker run -p 8000:8000 app-awards
+```
