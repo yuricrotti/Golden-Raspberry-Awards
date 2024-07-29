@@ -57,49 +57,65 @@ class AwardRepository:
 
         df = pd.DataFrame([award.__dict__ for award in awards_data])
 
-        producer_wins = {}
-        for _, row in df.iterrows():
-            producer = row["producers"]
-            year = row["year"]
-            if row["winner"] == True:
-                if producer not in producer_wins:
-                    producer_wins[producer] = []
-                producer_wins[producer].append(year)
+        df = df[df['winner'] == True]
 
-        # Calculate the intervals between the years the producers won
-        producer_intervals = []
-        for producer, years in producer_wins.items():
-            years.sort()
-            for i in range(1, len(years)):
-                interval = years[i] - years[i - 1]
-                producer_intervals.append(
-                    {
-                        "producer": producer,
-                        "interval": interval,
-                        "previousWin": years[i - 1],
-                        "followingWin": years[i],
-                    }
-                )
+        df = df[['year','producers']]
 
-        if not producer_intervals:
-            return {}
+        # Split producers and expand with producer
+        df = df.assign(producers=df['producers'].str.split(', | and ')).explode('producers')
 
-        # Get the producer with the smallest and largest interval
-        min_interval = min(producer_intervals, key=lambda x: x["interval"])
-        max_interval = max(producer_intervals, key=lambda x: x["interval"])
+        # Some cases remain with and
+        df['producers'] = df['producers'].apply(lambda x: x.replace("and",''))
 
-        # Get the producers with the smallest and largest interval
-        min_intervals = [
-            interval
-            for interval in producer_intervals
-            if interval["interval"] == min_interval["interval"]
-        ]
-        max_intervals = [
-            interval
-            for interval in producer_intervals
-            if interval["interval"] == max_interval["interval"]
-        ]
+        # Strip white spaces
+        df['producers'] = df['producers'].str.strip()
 
-        # Create the result dictionary
-        result = {"min": min_intervals, "max": max_intervals}
+        # Sort by producer and year
+        df = df.sort_values(by=['producers', 'year'])
+
+        df['producers'] = df['producers'].str.lower()
+
+        # Calculate the difference in years between consecutive awards for the same producer
+        df['year_diff'] = df.groupby('producers')['year'].diff()
+
+        # Get the previous and following win years
+        df['previousWin'] = df.groupby('producers')['year'].shift(1)
+
+        df['followingWin'] = df['year']
+
+        # Drop rows with NaN values
+        df = df.dropna()
+
+        #Find the minimum and maximum intervals
+        min_interval_value = df['year_diff'].min()
+        max_interval_value = df['year_diff'].max()
+
+        # Get the producers with the minimum and maximum intervals
+        min_interval = df[df['year_diff'] == min_interval_value]
+        max_interval = df[df['year_diff'] == max_interval_value]
+
+        # Prepare the output in the desired format
+        result = {
+            "min": [
+                {
+                    "producer": row['producers'].title(),
+                    "interval": int(row['year_diff']),
+                    "previousWin": int(row['previousWin']),
+                    "followingWin": int(row['followingWin'])
+                }
+                for _, row in min_interval.iterrows()
+            ],
+            "max": [
+                {
+                    "producer": row['producers'].title(),
+                    "interval": int(row['year_diff']),
+                    "previousWin": int(row['previousWin']),
+                    "followingWin": int(row['followingWin'])
+                }
+                for _, row in max_interval.iterrows()
+            ]
+        }
+
+
+
         return result

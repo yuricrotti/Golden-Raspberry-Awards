@@ -50,7 +50,7 @@ obs: Esse projeto está configurado para rodar na porta 8000, verique se você n
 
 Para rodar os testes, utilize o comando:
 ```sh
-pytest tests/ . 
+make test
 ```
 
 # Teste de Integração (github actions)
