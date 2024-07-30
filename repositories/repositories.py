@@ -53,26 +53,28 @@ class AwardRepository:
 
     @staticmethod
     def get_winner(db: Session) -> dict:
-        awards_data = db.query(Award).all()
-
+        # Get all the data from the database (filtering by winner = True)
+        awards_data = db.query(Award).filter(Award.winner == True).all()
+        
+        # Create a DataFrame from the data
         df = pd.DataFrame([award.__dict__ for award in awards_data])
-
-        df = df[df['winner'] == True]
-
+        
+        # Get the producers and the year of the awards
         df = df[['year','producers']]
-
+        
         # Split producers and expand with producer
         df = df.assign(producers=df['producers'].str.split(', | and ')).explode('producers')
-
+        
         # Some cases remain with and
         df['producers'] = df['producers'].apply(lambda x: x.replace("and",''))
-
+        
         # Strip white spaces
         df['producers'] = df['producers'].str.strip()
-
+        
         # Sort by producer and year
         df = df.sort_values(by=['producers', 'year'])
 
+        # Lowercase the producers
         df['producers'] = df['producers'].str.lower()
 
         # Calculate the difference in years between consecutive awards for the same producer
@@ -81,6 +83,7 @@ class AwardRepository:
         # Get the previous and following win years
         df['previousWin'] = df.groupby('producers')['year'].shift(1)
 
+        # Get the following win year
         df['followingWin'] = df['year']
 
         # Drop rows with NaN values
@@ -115,7 +118,6 @@ class AwardRepository:
                 for _, row in max_interval.iterrows()
             ]
         }
-
 
 
         return result
